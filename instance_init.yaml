@@ -1,0 +1,43 @@
+#cloud-config
+
+users:
+  - name: cmero
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhkPnioMeDb8oKZbjYC5tLRqAL0SdSaV4o19sw1dpbF andrei@um690
+
+write_files:
+  - path: /home/cmero/init_scripts/install_ruby.sh
+    permissions: 0700
+    content: |
+      #!/bin/bash
+      sudo apt update
+      sudo apt install -y ruby-full ruby-bundler build-essential
+  - path: /home/cmero/init_scripts/install_mongodb.sh
+    permissions: 0700
+    content: |
+      #!/bin/bash
+      wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+      echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+      sudo apt-get update
+      sudo apt-get install -y mongodb-org
+      sudo systemctl enable --now mongod
+  - path: /home/cmero/init_scripts/deploy.sh
+    permissions: 0700
+    content: |
+      #!/bin/bash
+      sudo apt install -y git
+      cd ~
+      git clone -b monolith https://github.com/express42/reddit.git
+      cd reddit && bundle install
+      puma -d
+  - path: /home/cmero/init_scripts/startup.sh
+    permissions: 0700
+    content: |
+      #!/bin/bash
+      /home/cmero/init_scripts/install_ruby.sh && /home/cmero/init_scripts/install_mongodb.sh && /home/cmero/init_scripts/deploy.sh
+
+runcmd:
+  - /home/cmero/init_scripts/startup.sh
