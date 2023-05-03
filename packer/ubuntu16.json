@@ -17,7 +17,7 @@
     "provisioners": [
         {
             "type": "shell",
-            "pause_before": "5m",
+            "pause_before": "1m",
             "script": "scripts/install_ruby.sh",
             "execute_command": "sudo {{.Path}}"
         },
