@@ -1,0 +1,8 @@
+{
+    "service_account_key_file": "service_account_key_file.json",
+    "folder_id": "b1g83nhfghjjia9hqhg",
+    "source_image_id": "fd8elec1fdhdgf9l67cp5",
+    "ssh_username": "bubuntu",
+    "subnet_id": "e9bru58icb6544a89a5a",
+    "zone": "ru-central1-a"
+}
