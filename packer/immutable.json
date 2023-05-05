@@ -34,7 +34,11 @@
         {
             "type": "file",
             "source": "files/reddit-app.service",
-            "destination": "/etc/systemd/system/reddit-app.service"
+            "destination": "/tmp/reddit-app.service"
+        },
+        {
+            "type": "shell",
+            "inline": "sudo cp /tmp/reddit-app.service /etc/systemd/system/"
         },
         {
             "type":"shell",
