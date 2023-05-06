@@ -23,6 +23,12 @@ packer build ./ubuntu16.json
 
 ### Для сборки и проверки полного образа ###
 
+* выполнить команду:
+
+``` bash
+packer build ./immutable.json
+```
+
 * запустить скрипт:
 
 ``` bash
