@@ -5,7 +5,7 @@
 * Создал сервисный аккаунт, делегировал ему минимально необходимые права (все команды обернул в скрипт).
 * Создайте IAM key.
 * Создал Packer-шаблон (```ubuntu16.json```), содержащий описание простого образа VM. Для полного деплоя приложения используются скрипты из каталога packer/scripts.
-* Создал Packer-шаблон(```immutable.json```), содержащий описание простого образа VM. Шаблон полного образа использует скрипты и ```systemd unit``` из каталога ```packer/files```.
+* Создал Packer-шаблон(```immutable.json```), содержащий описание полного образа VM. Шаблон полного образа использует скрипты и ```systemd unit``` из каталога ```packer/files```.
 * Параметризировал Packer-шаблон (переменные заполняются в ```packer/variables.json```).
 * Создал скрипт ```create-reddit-vm.sh``` в директории ```config-scripts```, который создает VM с помощью Yandex.Cloud CLI.
 
@@ -14,7 +14,7 @@
 * выполнить команду:
 
 ``` bash
-packer build ./ubuntu16.json
+packer build -var-file=./variables.json ./ubuntu16.json
 ```
 
 * создать VM из собранного образа
@@ -26,7 +26,7 @@ packer build ./ubuntu16.json
 * выполнить команду:
 
 ``` bash
-packer build ./immutable.json
+packer build -var-file=./variables.json ./immutable.json
 ```
 
 * запустить скрипт:
