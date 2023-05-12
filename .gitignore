@@ -1,0 +1,10 @@
+# Mains
+svc_acct_key.json
+variables.json
+
+# Terraform
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/
