@@ -1,12 +1,12 @@
 # Comment for passing tests
-# terraform {
-#   required_providers {
-#     yandex = {
-#       source = "yandex-cloud/yandex"
-#     }
-#   }
-#   required_version = ">= 0.12"
-# }
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+  required_version = ">= 0.12"
+}
 
 provider "yandex" {
   service_account_key_file = var.service_account_key_file
@@ -17,8 +17,8 @@ provider "yandex" {
 
 resource "yandex_compute_instance" "app" {
   count = var.inst_count
-  name = "reddit-app-${count.index + 1}"
-  zone = var.zone
+  name  = "reddit-app-${count.index + 1}"
+  zone  = var.zone
 
   resources {
     cores         = 2
@@ -34,8 +34,8 @@ resource "yandex_compute_instance" "app" {
   }
 
   network_interface {
-    # Указан id подсети default-ru-central1-a
-    subnet_id = var.subnet_id
+    # Указан id создаваемой подсети
+    subnet_id = yandex_vpc_subnet.app-subnet.id
     nat       = true
   }
 
@@ -60,4 +60,15 @@ resource "yandex_compute_instance" "app" {
   provisioner "remote-exec" {
     script = "files/deploy.sh"
   }
+}
+
+resource "yandex_vpc_network" "app-network" {
+  name = "reddit-app-network"
+}
+
+resource "yandex_vpc_subnet" "app-subnet" {
+  name           = "reddit-app-subnet"
+  zone           = var.zone
+  network_id     = yandex_vpc_network.app-network.id
+  v4_cidr_blocks = ["192.168.10.0/24"]
 }

@@ -13,6 +13,6 @@ output "external_ip_address_apps" {
 #   value = yandex_lb_network_load_balancer.lb.listener[*].external_address_spec[*].address
 # }
 
-output "external_ip_address_lb" {
-  value = tolist(tolist(yandex_lb_network_load_balancer.lb.listener)[0].external_address_spec)[0].address
-}
+# output "external_ip_address_lb" {
+#   value = tolist(tolist(yandex_lb_network_load_balancer.lb.listener)[0].external_address_spec)[0].address
+# }
