@@ -15,3 +15,11 @@ variable "ssh_user" {
   description = "User name for SSH connection"
   default     = "ubuntu"
 }
+
+variable "db_url" {
+  description = "Database IP address"
+}
+
+variable "private_key_path" {
+  description = "Path to the public key used for ssh access"
+}
