@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     endpoint                = "storage.yandexcloud.net"
-    bucket                  = "andrei-sergeich-infra-bucket"
+    bucket                  = var.bucket_name
     region                  = "ru-central1"
     key                     = "prod/terraform.tfstate"
     shared_credentials_file = "./s3_credentials"
