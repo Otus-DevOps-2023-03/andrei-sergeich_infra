@@ -16,7 +16,7 @@ module "app" {
   private_key_path = var.private_key_path
   db_url           = module.db.external_ip_address_db
   subnet_id        = module.vpc.app_subnet_id
-  depends_on       = [module.db]
+#   depends_on       = [module.db]
 }
 
 module "db" {
@@ -25,5 +25,5 @@ module "db" {
   db_disk_image    = var.db_disk_image
   private_key_path = var.private_key_path
   subnet_id        = module.vpc.app_subnet_id
-  depends_on       = [module.vpc]
+#   depends_on       = [module.vpc]
 }
