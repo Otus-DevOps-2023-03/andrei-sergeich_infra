@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     endpoint                = "storage.yandexcloud.net"
-    bucket                  = var.bucket_name
+    bucket                  = "terraform-2-state-backend"
     region                  = "ru-central1"
     key                     = "stage/terraform.tfstate"
     shared_credentials_file = "./s3_credentials"
