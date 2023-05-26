@@ -1,5 +1,6 @@
 # Mains
 svc_acct_key.json
+s3_credentials
 variables.json
 
 # Terraform
@@ -8,3 +9,4 @@ variables.json
 *.tfstate.backup
 *.tfvars
 .terraform/
+providers.tf
