@@ -1,4 +1,5 @@
 # Mains
+.vscode
 svc_acct_key.json
 s3_credentials
 variables.json

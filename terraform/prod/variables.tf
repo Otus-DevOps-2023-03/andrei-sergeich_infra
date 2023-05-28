@@ -54,7 +54,3 @@ variable "ssh_user" {
   description = "User name for SSH connection"
   default     = "ubuntu"
 }
-
-variable "bucket_name" {
-  description = "s3 bucket name"
-}

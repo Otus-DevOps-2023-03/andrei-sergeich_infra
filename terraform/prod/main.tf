@@ -27,3 +27,13 @@ module "db" {
   subnet_id        = module.vpc.app_subnet_id
 #   depends_on       = [module.vpc]
 }
+
+resource "local_file" "hosts_cfg" {
+  content = templatefile("${path.module}/ansible_inventory_json.tpl",
+    {
+      app_servers = module.app.*.external_ip_address_app
+      db_servers  = module.db.*.external_ip_address_db
+    }
+  )
+  filename = "../../ansible/inventory.json"
+}
