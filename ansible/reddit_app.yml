@@ -1,0 +1,19 @@
+---
+
+- name: Configure hosts & deploy application # <-- Словесное описание сценария (name)
+  hosts: all # <-- Для каких хостов будут выполняться описанные ниже таски (hosts)
+  vars:
+    mongo_bind_ip: 0.0.0.0 # <-- Переменная задается в блоке vars
+  tasks: # <-- Блок тасков (заданий), которые будут выполняться для данных хостов
+    - name: Change mongo config file
+      become: true # <-- Выполнить задание от root
+      template:
+        src: templates/mongod.conf.j2 # <-- Путь до локального файла-шаблона
+        dest: /etc/mongod.conf # <-- Путь на удаленном хосте
+        mode: "0644" # <-- Права на файл, которые нужно установить
+      tags: db-tag # <-- Список тэгов для задачи
+      notify: Restart mongod
+  handlers: # <-- Добавим блок handlers и задачу
+    - name: Restart mongod
+      become: true
+      service: name=mongod state=restarted
