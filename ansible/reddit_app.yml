@@ -4,7 +4,9 @@
   hosts: all # <-- Для каких хостов будут выполняться описанные ниже таски (hosts)
   vars:
     mongo_bind_ip: 0.0.0.0 # <-- Переменная задается в блоке vars
+    db_host: 192.168.10.20 # <-- подставьте сюда ваш IP
   tasks: # <-- Блок тасков (заданий), которые будут выполняться для данных хостов
+
     - name: Change mongo config file
       become: true # <-- Выполнить задание от root
       template:
@@ -13,7 +15,30 @@
         mode: "0644" # <-- Права на файл, которые нужно установить
       tags: db-tag # <-- Список тэгов для задачи
       notify: Restart mongod
-  handlers: # <-- Добавим блок handlers и задачу
+
+    - name: Add unit file for Puma
+      become: true
+      copy:
+        src: files/puma.service
+        dest: /etc/systemd/system/puma.service
+      tags: app-tag
+      notify: Reload puma
+
+    - name: Add config for DB connection
+      template:
+        src: templates/db_config.j2
+        dest: /home/ubuntu/db_config
+      tags: app-tag
+
+    - name: Enable puma
+      become: true
+      systemd: name=puma enabled=yes
+      tags: app-tag
+
+  handlers:
     - name: Restart mongod
       become: true
       service: name=mongod state=restarted
+    - name: Reload puma
+      become: true
+      systemd: name=puma state=restarted
