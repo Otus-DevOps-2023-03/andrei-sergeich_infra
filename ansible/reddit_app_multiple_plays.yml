@@ -32,14 +32,12 @@
         src: files/puma.service
         dest: /etc/systemd/system/puma.service
       notify: Reload puma
-
     - name: Add config for DB connection
       template:
         src: templates/db_config.j2
         dest: /home/ubuntu/db_config
         owner: ubuntu
         group: ubuntu
-
     - name: Enable puma
       systemd: name=puma enabled=yes
 
@@ -57,14 +55,12 @@
       apt:
         name: git
         state: present
-
     - name: Fetch the latest version of application code
       git:
         repo: 'https://github.com/express42/reddit.git'
         dest: /home/ubuntu/reddit
         version: monolith
       notify: Reload puma
-
     - name: Bundle install
       bundler:
         state: present
