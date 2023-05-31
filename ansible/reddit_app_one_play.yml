@@ -9,7 +9,7 @@
 
     - name: Change mongo config file
       become: true # <-- Выполнить задание от root
-      template:
+      ansible.builtin.template:
         src: templates/mongod.conf.j2 # <-- Путь до локального файла-шаблона
         dest: /etc/mongod.conf # <-- Путь на удаленном хосте
         mode: "0644" # <-- Права на файл, которые нужно установить
@@ -18,32 +18,36 @@
 
     - name: Add unit file for Puma
       become: true
-      copy:
+      ansible.builtin.copy:
         src: files/puma.service
         dest: /etc/systemd/system/puma.service
+        mode: "0644"
       tags: app-tag
       notify: Reload puma
 
     - name: Add config for DB connection
-      template:
+      ansible.builtin.template:
         src: templates/db_config.j2
         dest: /home/ubuntu/db_config
+        mode: "0664"
       tags: app-tag
 
     - name: Enable puma
       become: true
-      systemd: name=puma enabled=yes
+      ansible.builtin.systemd:
+        name: puma
+        enabled: true
       tags: app-tag
 
     - name: Install git
       become: true
-      apt:
+      ansible.builtin.apt:
         name: git
         state: present
       tags: deploy-tag
 
     - name: Fetch the latest version of application code
-      git:
+      ansible.builtin.git:
         repo: 'https://github.com/express42/reddit.git'
         dest: /home/ubuntu/reddit
         version: monolith # <-- Указываем нужную ветку
@@ -51,7 +55,7 @@
       notify: Reload puma
 
     - name: Bundle install
-      bundler:
+      community.general.bundler:
         state: present
         chdir: /home/ubuntu/reddit # <-- В какой директории выполнить команду bundle
       tags: deploy-tag
@@ -59,7 +63,11 @@
   handlers:
     - name: Restart mongod
       become: true
-      service: name=mongod state=restarted
+      ansible.builtin.service:
+        name: mongod
+        state: restarted
     - name: Reload puma
       become: true
-      systemd: name=puma state=restarted
+      ansible.builtin.systemd:
+        name: puma
+        state: restarted
