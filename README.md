@@ -10,6 +10,13 @@
 
 Так же создал теги, хэндлеры, шаблоны файлов, реализовал провижининг ```Packer```'а с помощью ```Ansible```.
 
+Сборка ```Packer```-образов выполняется из корня репозитория командами:
+
+``` bash
+packer build -var-file=packer/variables.json packer/app.json
+packer build -var-file=packer/variables.json packer/db.json
+```
+
 Для выполнения данного ДЗ отключил провижининг в ```Terraform```. В окружении **stage** используются образы, созданные ```Packer```'ом с провижинингом ```Ansible```. Динамический inventory генерируется ```Terraform```'ом.
 
 Для сборки:
