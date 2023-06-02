@@ -1,0 +1,29 @@
+---
+
+- name: Install MongoDB 3.2
+  hosts: all
+
+  tasks:
+    - name: Add key for MongoDB
+      become: true
+      ansible.builtin.apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.2.asc
+        state: present
+    - name: Add repo for MongoDB
+      become: true
+      ansible.builtin.apt_repository:
+        repo: deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse
+        state: present
+    - name: Install MongoDB
+      become: true
+      ansible.builtin.apt:
+        update-cache: true
+        name:
+          - mongodb-org
+        state: present
+    - name: Enable mongod
+      become: true
+      ansible.builtin.systemd:
+        name: mongod
+        enabled: true
+        state: started
