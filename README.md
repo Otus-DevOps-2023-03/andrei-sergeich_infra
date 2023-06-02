@@ -10,12 +10,22 @@
 
 Так же создал теги, хэндлеры, шаблоны файлов, реализовал провижининг ```Packer```'а с помощью ```Ansible```.
 
-Сборка ```Packer```-образов выполняется из корня репозитория командами:
+Для сборки ```Packer```-образов:
 
-``` bash
-packer build -var-file=packer/variables.json packer/app.json
-packer build -var-file=packer/variables.json packer/db.json
-```
+* нужно добавить в ```Packer```-шаблоны (```{app,db}.json```), содержащие описание образов VM, в раздел ```provisioners``` строку
+
+    ``` json
+    "use_proxy": "false"
+    ```
+
+   > Убрал ее из-за того, что тесты не знают такой параметр
+
+* выполнить сборку образов:
+
+    ``` bash
+    packer build -var-file=packer/variables.json packer/app.json
+    packer build -var-file=packer/variables.json packer/db.json
+    ```
 
 Для выполнения данного ДЗ отключил провижининг в ```Terraform```. В окружении **stage** используются образы, созданные ```Packer```'ом с провижинингом ```Ansible```. Динамический inventory генерируется ```Terraform```'ом.
 
@@ -23,10 +33,10 @@ packer build -var-file=packer/variables.json packer/db.json
 
 * перейти в каталог **stage** или **prod**, выполнить команды:
 
-   ``` bash
-   terraform init
-   terraform apply
-   ```
+    ``` bash
+    terraform init
+    terraform apply
+    ```
 
 * в плэйбуке ```ansible/app.yml``` заполнить значение переменной ```db_host```, подставив IP-адрес VM с базой данных (внутренний или внешний)
 * запустить плэйбук командой:
