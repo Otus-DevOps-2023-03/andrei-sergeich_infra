@@ -6,7 +6,7 @@
   tasks:
     - name: Install ruby, bundler and required packeges
       become: true
-      ansible.builtin.apt:
+      apt:
         update-cache: true
         name: "{{ item }}"
         state: present

@@ -9,7 +9,7 @@
 
     - name: Change mongo config file
       become: true # <-- Выполнить задание от root
-      ansible.builtin.template:
+      template:
         src: templates/mongod.conf.j2 # <-- Путь до локального файла-шаблона
         dest: /etc/mongod.conf # <-- Путь на удаленном хосте
         mode: "0644" # <-- Права на файл, которые нужно установить
@@ -18,7 +18,7 @@
 
     - name: Add unit file for Puma
       become: true
-      ansible.builtin.copy:
+      copy:
         src: files/puma.service
         dest: /etc/systemd/system/puma.service
         mode: "0644"
@@ -26,7 +26,7 @@
       notify: Reload puma
 
     - name: Add config for DB connection
-      ansible.builtin.template:
+      template:
         src: templates/db_config.j2
         dest: /home/ubuntu/db_config
         mode: "0664"
@@ -34,20 +34,20 @@
 
     - name: Enable puma
       become: true
-      ansible.builtin.systemd:
+      systemd:
         name: puma
         enabled: true
       tags: app-tag
 
     - name: Install git
       become: true
-      ansible.builtin.apt:
+      apt:
         name: git
         state: present
       tags: deploy-tag
 
     - name: Fetch the latest version of application code
-      ansible.builtin.git:
+      git:
         repo: 'https://github.com/express42/reddit.git'
         dest: /home/ubuntu/reddit
         version: monolith # <-- Указываем нужную ветку
@@ -55,7 +55,7 @@
       notify: Reload puma
 
     - name: Bundle install
-      community.general.bundler:
+      bundler:
         state: present
         chdir: /home/ubuntu/reddit # <-- В какой директории выполнить команду bundle
       tags: deploy-tag
@@ -63,11 +63,11 @@
   handlers:
     - name: Restart mongod
       become: true
-      ansible.builtin.service:
+      service:
         name: mongod
         state: restarted
     - name: Reload puma
       become: true
-      ansible.builtin.systemd:
+      systemd:
         name: puma
         state: restarted
