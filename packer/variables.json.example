@@ -1,5 +1,5 @@
 {
-    "service_account_key_file": "svc_acct_example.json",
+    "service_account_key_file": "packer/svc_acct_example.json",
     "folder_id": "b1g83nhfghjjia9hqhg",
     "source_image_id": "fd8elec1fdhdgf9l67cp5",
     "ssh_username": "bubuntu",

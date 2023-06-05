@@ -11,3 +11,6 @@ variables.json
 *.tfvars
 .terraform/
 providers.tf
+
+# Ansible
+*.retry

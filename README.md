@@ -1,5 +1,61 @@
 # OTUS HW
 
+## ДЗ по модулю "Продолжение знакомства с Ansible: templates, handlers, dynamic inventory, vault, tags"
+
+В процессе выполнения реализовал несколько сценариев:
+
+* Один playbook, один сценарий
+* Один плейбук, несколько сценариев
+* Несколько плейбуков
+
+Так же создал теги, хэндлеры, шаблоны файлов, реализовал провижининг ```Packer```'а с помощью ```Ansible```.
+
+Для сборки ```Packer```-образов:
+
+* нужно добавить в ```Packer```-шаблоны (```{app,db}.json```), содержащие описание образов VM, в раздел ```provisioners``` строку
+
+    ``` json
+    "use_proxy": "false"
+    ```
+
+   > Убрал ее из-за того, что тесты не знают такой параметр
+
+* выполнить сборку образов:
+
+    ``` bash
+    packer build -var-file=packer/variables.json packer/app.json
+    packer build -var-file=packer/variables.json packer/db.json
+    ```
+
+Для выполнения данного ДЗ отключил провижининг в ```Terraform```. В окружении **stage** используются образы, созданные ```Packer```'ом с провижинингом ```Ansible```. Динамический inventory генерируется ```Terraform```'ом.
+
+Для сборки:
+
+* перейти в каталог **stage** или **prod**, выполнить команды:
+
+    ``` bash
+    terraform init
+    terraform apply
+    ```
+
+* в плэйбуке ```ansible/app.yml``` заполнить значение переменной ```db_host```, подставив IP-адрес VM с базой данных (внутренний или внешний)
+* запустить плэйбук командой:
+
+    ``` bash
+    ansible-playbook site.yml
+    ```
+
+Для проверки:
+
+* ``` bash
+  terraform output
+  ```
+
+* ```external_ip_address_app``` - адрес VM с приложением из вывода output переменной
+* открыть в браузере <http://external_ip_address_app:9292>
+
+---
+
 ## ДЗ по модулю "Управление конфигурацией. Знакомство с Ansible"
 
 * Установлен и сконфигурирован ansible:
@@ -12,6 +68,19 @@
   Команда удалит директорию и вложенные файлы репозитория приложения. После запуска плэйбука репозиторий будет снова клонирован и ansible сообщит об успешном изменении.
 
 * Динамический ```inventory.json``` создается с помощью ресурса terraform во время разворачивания инфраструктуры (ресурс описан в файлах ```terrafom/{stage,prod}/main.tf```, шаблон - ```terrafom/{stage,prod}/ansible_inventory_json.tpl```)
+
+Для сборки перейти в каталог **stage** или **prod**, выполнить команды:
+
+``` bash
+terraform init
+terraform apply
+```
+
+Для проверки в том же каталоге, где была произведена сборка, выполнить команду:
+
+``` bash
+ansible all -m ping
+```
 
 ---
 
@@ -40,7 +109,7 @@ terraform apply
   terraform output
   ```
 
-* ```external_ip_address_app``` - адрес HTTP балансировщика из вывода output переменной
+* ```external_ip_address_app``` - адрес VM с приложением из вывода output переменной
 * открыть в браузере <http://external_ip_address_app:9292>
 
 ---
