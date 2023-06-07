@@ -14,3 +14,4 @@ providers.tf
 
 # Ansible
 *.retry
+jdauphant.nginx
