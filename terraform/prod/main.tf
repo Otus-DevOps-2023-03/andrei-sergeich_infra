@@ -11,6 +11,7 @@ module "vpc" {
 
 module "app" {
   source           = "../modules/app"
+  ssh_user         = var.ssh_user
   public_key_path  = var.public_key_path
   app_disk_image   = var.app_disk_image
   private_key_path = var.private_key_path
@@ -21,6 +22,7 @@ module "app" {
 
 module "db" {
   source           = "../modules/db"
+  ssh_user         = var.ssh_user
   public_key_path  = var.public_key_path
   db_disk_image    = var.db_disk_image
   private_key_path = var.private_key_path
