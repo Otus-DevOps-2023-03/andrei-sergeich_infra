@@ -1,5 +1,49 @@
 # OTUS HW
 
+## ДЗ по модулю "Ansible роли, управление настройками нескольких окружений и best practices"
+
+* Перенес созданные впрошлых ДЗ плейбуки в раздельные роли
+* Описал два окружения (окружение по-умолчанию - **stage**)
+* Подключил коммьюнити роль nginx
+* Использовал Ansible Vault для окружений
+
+Динамический inventory генерируется ```Terraform```'ом.
+
+Для сборки:
+
+* перейти в каталог **terraform/stage** или **terraform/prod**, выполнить команды:
+
+    ``` bash
+    terraform init
+    terraform apply
+    ```
+
+* в файле ```environments/{stage,prod}/group_vars/app``` заполнить значение переменной ```db_host```, подставив IP-адрес VM с базой данных (внутренний или внешний)
+* в каталоге **ansible** запустить плэйбук командой:
+
+    > Для настройки окружения **stage**
+
+    ``` bash
+    ansible-playbook playbooks/site.yml
+    ```
+
+    > Для настройки окружения **prod**
+
+    ``` bash
+    ansible-playbook -i environments/prod/inventory playbooks/site.yml
+    ```
+
+Для проверки:
+
+* ``` bash
+  terraform output
+  ```
+
+* ```external_ip_address_app``` - адрес VM с приложением из вывода output переменной
+* открыть в браузере <http://external_ip_address_app:9292>
+
+---
+
 ## ДЗ по модулю "Продолжение знакомства с Ansible: templates, handlers, dynamic inventory, vault, tags"
 
 В процессе выполнения реализовал несколько сценариев:
@@ -31,7 +75,7 @@
 
 Для сборки:
 
-* перейти в каталог **stage** или **prod**, выполнить команды:
+* перейти в каталог **terraform/stage** или **terraform/prod**, выполнить команды:
 
     ``` bash
     terraform init

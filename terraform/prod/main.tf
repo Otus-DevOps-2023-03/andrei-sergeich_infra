@@ -11,6 +11,7 @@ module "vpc" {
 
 module "app" {
   source           = "../modules/app"
+  ssh_user         = var.ssh_user
   public_key_path  = var.public_key_path
   app_disk_image   = var.app_disk_image
   private_key_path = var.private_key_path
@@ -21,6 +22,7 @@ module "app" {
 
 module "db" {
   source           = "../modules/db"
+  ssh_user         = var.ssh_user
   public_key_path  = var.public_key_path
   db_disk_image    = var.db_disk_image
   private_key_path = var.private_key_path
@@ -29,11 +31,11 @@ module "db" {
 }
 
 resource "local_file" "hosts_cfg" {
-  content = templatefile("${path.module}/ansible_inventory_json.tpl",
+  content = templatefile("${path.module}/ansible_inventory_yml.tpl",
     {
       app_servers = module.app.*.external_ip_address_app
       db_servers  = module.db.*.external_ip_address_db
     }
   )
-  filename = "../../ansible/inventory.json"
+  filename = "../../ansible/environments/prod/inventory"
 }

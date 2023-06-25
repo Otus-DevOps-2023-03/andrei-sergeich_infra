@@ -1,9 +1,9 @@
 [app]
-%{ for index, ip in app_servers ~}
-appserver-${index} ansible_host=${ip}
+%{ for ip in app_servers ~}
+appserver ansible_host=${ip}
 %{ endfor ~}
 
 [db]
-%{ for index, ip in db_servers ~}
-dbserver-${index} ansible_host=${ip}
+%{ for ip in db_servers ~}
+dbserver ansible_host=${ip}
 %{ endfor ~}
