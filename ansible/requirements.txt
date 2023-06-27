@@ -1,1 +1,4 @@
-ansible>=2.4
+ansible==7.5.0
+molecule==5.0.0
+molecule-plugins[vagrant]
+testinfra>=6.0
