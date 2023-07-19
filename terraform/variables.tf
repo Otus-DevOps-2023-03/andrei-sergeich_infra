@@ -66,3 +66,7 @@ variable "access_key" {
 variable "secret_key" {
   description = "secret key for s3 bucket"
 }
+
+variable "kms_key_name" {
+  description = "name of KMS chipher key for s3 bucket"
+}
