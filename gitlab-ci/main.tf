@@ -45,12 +45,11 @@ resource "yandex_vpc_subnet" "gitlab-subnet" {
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
-# resource "local_file" "hosts_cfg" {
-#   content = templatefile("${path.module}/ansible_inventory_ini.tpl",
-#     {
-#       app_servers = module.app.*.external_ip_address_app
-#       db_servers  = module.db.*.external_ip_address_db
-#     }
-#   )
-#   filename = "../../ansible/environments/stage/inventory"
-# }
+resource "local_file" "hosts_cfg" {
+  content = templatefile("${path.module}/ansible_inventory_ini.tpl",
+    {
+      gitlab_servers = yandex_compute_instance.gitlab[*].network_interface.0.nat_ip_address
+    }
+  )
+  filename = "./inventory"
+}
