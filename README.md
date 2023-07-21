@@ -4,6 +4,29 @@
 
 * Описал создание облачной инфраструктуры с помощью ***Terraform***
 * Описал установку ***Docker*** на инстанс с помощью ***Ansible***
+* Описал установку ***GitLab*** на инстанс с помощью ```docker compose```
+
+Для сборки:
+
+* перейти в каталог **gitlab-ci**, выполнить команды:
+
+    ``` bash
+    terraform init
+    terraform apply
+    ansible-playbook install_docker.yml
+    ansible-playbook install_gitlab.yml
+    ```
+
+* чтобы получить пароль для входа, нужно подключиться к инстансу по ```ssh``` и выполнить:
+
+    ``` bash
+    docker exec -it gitlab_web_1 bash
+    cat /etc/gitlab/initial_root_password | grep Password:
+    ```
+
+Для проверки:
+
+* открыть в браузере <http://IP_адрес_созданной_VM>
 
 ---
 
