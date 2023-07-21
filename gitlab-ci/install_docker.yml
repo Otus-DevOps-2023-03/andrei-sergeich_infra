@@ -13,6 +13,7 @@
       become: true
       ansible.builtin.apt:
         pkg:
+          - apt-transport-https
           - ca-certificates
           - curl
           - gnupg2
@@ -38,9 +39,11 @@
           - docker-ce
           - docker-ce-cli
           - containerd.io
-          # - docker-buildx-plugin
-          # - docker-compose-plugin
+          - docker-buildx-plugin
+          - docker-compose
+          - docker-compose-plugin
         state: present
+        update_cache: true
 
     - name: Ensure group "docker" exists
       ansible.builtin.group:
