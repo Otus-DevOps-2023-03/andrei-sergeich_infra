@@ -9,6 +9,7 @@
 * Добавил в проект тесты
 * Добавил окружения ```dev```, ```stage```. ```production``` в пайплайн
 * Добавил создание динамических окружений для каждой ветки в репозитории, кроме ветки master
+* Добавил автоматизацию развёртывания GitLab Runner
 
 Для сборки:
 
@@ -26,6 +27,13 @@
     ``` bash
     docker exec -it gitlab_web_1 bash
     cat /etc/gitlab/initial_root_password | grep Password:
+    ```
+
+* открыть в браузере <http://IP_адрес_созданной_VM>, перейти в проект, далее в Settings->CI/CD->Runners, скопировать токен и вставить его в значение параметра ```REGISTRATION_TOKEN``` файла ```docker-compose-runner.yml.j2```
+* запустить плейбук, устанавливающий и регистрирующий раннер:
+
+    ``` bash
+    ansible-playbook register_gitlab.yml
     ```
 
 Для проверки:

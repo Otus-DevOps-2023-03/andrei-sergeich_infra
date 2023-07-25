@@ -1,0 +1,26 @@
+---
+- name: Add and register gitlab-runner
+  hosts: all
+  tasks:
+
+    - name: Create catalog for volumes
+      become: true
+      ansible.builtin.file:
+        path: /srv/gitlab-runner/config
+        state: directory
+        mode: "0755"
+
+    - name: Copy docker-compose file
+      become: true
+      ansible.builtin.template:
+        src: docker-compose-runner.yml.j2
+        dest: /srv/gitlab-runner/docker-compose.yml
+        mode: "0755"
+
+    - name: Run docker-compose
+      become: true
+      community.docker.docker_compose:
+        project_src: /srv/gitlab-runner/
+        state: present
+      # vars:
+      #   ansible_python_interpreter: /usr/bin/python3
