@@ -29,11 +29,11 @@
     cat /etc/gitlab/initial_root_password | grep Password:
     ```
 
-* открыть в браузере <http://IP_адрес_созданной_VM>, перейти в проект, далее в Settings->CI/CD->Runners, скопировать токен и вставить его в значение параметра ```REGISTRATION_TOKEN``` файла ```docker-compose-runner.yml.j2```
+* открыть в браузере <http://IP_адрес_созданной_VM>, перейти в проект, далее в Settings->CI/CD->Runners, скопировать токен и вставить его в значение параметра ```--registration-token``` файла ```install_gitlab_runner.yml```
 * запустить плейбук, устанавливающий и регистрирующий раннер:
 
     ``` bash
-    ansible-playbook register_gitlab.yml
+    ansible-playbook install_gitlab_runner.yml
     ```
 
 Для проверки:

@@ -1,0 +1,39 @@
+---
+- name: Add and register gitlab-runner
+  hosts: all
+  tasks:
+
+    - name: Create catalog for volumes
+      become: true
+      ansible.builtin.file:
+        path: /srv/gitlab-runner/config
+        state: directory
+        mode: "0755"
+
+    - name: Run Gitlab Runner
+      become: true
+      community.docker.docker_container:
+        name: gitlab-runner
+        image: gitlab/gitlab-runner:latest
+        volumes:
+          - /srv/gitlab-runner/config:/etc/gitlab-runner
+          - /var/run/docker.sock:/var/run/docker.sock
+        detach: true
+        state: started
+        restart_policy: always
+
+    - name: Register Gitlab Runner
+      become: true
+      community.docker.docker_container_exec:
+        container: gitlab-runner
+        command: >
+          gitlab-runner register
+          --url http://{{ ansible_host }}/
+          --non-interactive
+          --locked=false
+          --name DockerRunner
+          --executor docker
+          --docker-image alpine:latest
+          --registration-token GR1348941U1U5VJCxrfyaVV7Z2xsj
+          --tag-list "linux,xenial,ubuntu,docker"
+          --run-untagged
