@@ -1,32 +1,73 @@
-image: docker:20.10.16
+image: ruby:2.4.2
 
 stages:
   - build
+  - test
+  - review
+  - stage
+  - production
 
 variables:
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_HOST: tcp://docker:2375
+  DATABASE_URL: 'mongodb://mongo/user_posts'
 
 before_script:
-  - cd gitlab-ci/docker-monolith/
-  - docker info
-
-services:
-  - docker:20.10.16-dind
+  - cd gitlab-ci/reddit
+  - bundle install
 
 build_job:
   stage: build
+  script:
+    - echo 'Building'
+    - docker build -t reddit:$CI_ENVIRONMENT_SLUG gitlab-ci/docker-monolith/
+    - docker run --name reddit -d --network=host reddit:$CI_ENVIRONMENT_SLUG
+
+test_unit_job:
+  stage: test
+  services:
+    - mongo:latest
+  script:
+    - ruby simpletest.rb
+
+test_integration_job:
+  stage: test
+  script:
+    - echo 'Testing 2'
+
+deploy_dev_job:
+  stage: review
+  script:
+    - echo 'Deploy'
+  environment:
+    name: dev
+    url: http://dev.example.com
+
+branch review:
+  stage: review
+  script: echo "Deploy to $CI_ENVIRONMENT_SLUG"
   environment:
     name: branch/$CI_COMMIT_REF_NAME
     url: http://$CI_ENVIRONMENT_SLUG.example.com
-  script:
-    - echo "Deploy to $CI_ENVIRONMENT_SLUG"
-    - echo $CI_ENVIRONMENT_URL
-    - docker build -t reddit-app-image .
-    - docker run -d -p 9292:9292 --network=host --name reddit-app reddit-app-image
-    - sleep 15
-    - wget -O- docker:9292
   only:
     - branches
   except:
     - master
+
+staging:
+  stage: stage
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy'
+  environment:
+    name: beta
+    url: http://beta.example.com
+
+production:
+  stage: production
+  when: manual
+  script:
+    - echo 'Deploy'
+  environment:
+    name: production
+    url: http://example.com
