@@ -37,3 +37,20 @@
           --registration-token GR1348941U1U5VJCxrfyaVV7Z2xsj
           --tag-list "linux,xenial,ubuntu,docker"
           --run-untagged
+
+    - name: Register Gitlab Runner in Docker
+      become: true
+      community.docker.docker_container_exec:
+        container: gitlab-runner
+        command: >
+          gitlab-runner register
+          --url http://{{ ansible_host }}/
+          --non-interactive
+          --locked=false
+          --name DockerInDockerRunner
+          --executor docker
+          --docker-image docker:20.10.16
+          --docker-privileged
+          --registration-token GR1348941U1U5VJCxrfyaVV7Z2xsj
+          --tag-list "linux,xenial,ubuntu,docker"
+          --run-untagged
