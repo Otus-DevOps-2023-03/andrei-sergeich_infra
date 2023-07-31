@@ -40,33 +40,7 @@ variable "inst_count" {
   default     = 1
 }
 
-variable "app_disk_image" {
-  description = "Disk image for reddit app"
-  default     = "reddit-app-base"
-}
-
-variable "db_disk_image" {
-  description = "Disk image for reddit db"
-  default     = "reddit-db-base"
-}
-
 variable "ssh_user" {
   description = "User name for SSH connection"
   default     = "ubuntu"
-}
-
-variable "bucket_name" {
-  description = "s3 bucket name"
-}
-
-variable "access_key" {
-  description = "access key for s3 bucket"
-}
-
-variable "secret_key" {
-  description = "secret key for s3 bucket"
-}
-
-variable "kms_key_name" {
-  description = "name of KMS chipher key for s3 bucket"
 }

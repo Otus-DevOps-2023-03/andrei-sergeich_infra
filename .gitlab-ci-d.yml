@@ -1,0 +1,32 @@
+image: docker:20.10.16
+
+stages:
+  - build
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375
+
+before_script:
+  - cd gitlab-ci/docker-monolith/
+  - docker info
+
+services:
+  - docker:20.10.16-dind
+
+build_job:
+  stage: build
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.example.com
+  script:
+    - echo "Deploy to $CI_ENVIRONMENT_SLUG"
+    - echo $CI_ENVIRONMENT_URL
+    - docker build -t reddit-app-image .
+    - docker run -d -p 9292:9292 --network=host --name reddit-app reddit-app-image
+    - sleep 15
+    - wget -O- docker:9292
+  only:
+    - branches
+  except:
+    - master

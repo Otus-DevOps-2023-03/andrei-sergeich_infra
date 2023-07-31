@@ -1,0 +1,28 @@
+---
+- name: Prepare docker-compose.yml on server
+  hosts: all
+  tasks:
+
+    - name: Create catalogs for volumes
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /srv/gitlab/config
+        - /srv/gitlab/data
+        - /srv/gitlab/logs
+
+    - name: Create docker-compose file
+      become: true
+      ansible.builtin.template:
+        src: docker-compose-gitlab.yml.j2
+        dest: /srv/gitlab/docker-compose.yml
+        mode: "0755"
+
+    - name: Run docker-compose
+      become: true
+      community.docker.docker_compose:
+        project_src: /srv/gitlab/
+        state: present
